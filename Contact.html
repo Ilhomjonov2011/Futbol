@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<link rel="icon" href="./assests/images/Logotip.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Futbol Olami</title>
+<link rel="stylesheet" href="./css/boots.css">
+<link rel="stylesheet" href="./css/Styles.css">
+</head>
+<body>
+<header>
+<div class="container header-container">
+<a class="header-logo-link" href="./Home.html"><span class="header-name">⚽ Futbol Olami</span></a>
+<div class="header-right">
+<div class="header-nav-link-name"><a class="header-nav-link" href="./Home.html"><img class="nav-link-icon" src="./assests/images/home.png" alt="home"><span>Home</span></a></div>
+<a class="header-nav-link" href="./About.html"><img class="nav-link-icon" src="./assests/images/about.png" alt="about"><span>About</span></a>
+<a class="header-nav-link" href="./Highlights.html"><img class="nav-link-icon" src="./assests/images/highlights.png" alt="highlights"><span>Highlights</span></a>
+<a class="header-nav-link" href="./News.html"><img class="nav-link-icon" src="./assests/images/news.png" alt="news"><span>News</span></a>
+<a class="header-nav-link" href="./Stats.html"><img class="nav-link-icon" src="./assests/images/stats.png" alt="stats"><span>Stats</span></a>
+<a class="contact-link" href="./Contact.html"><span>Contact</span></a>
+<img class="hamburger" src="./assests/images/hamburger.png" alt="menu">
+</div>
+</div>
+</header>
+<main>
+<section class="register" id="header-part">
+<div class="container register-container">
+<form action="https://echo.htmlacademy.ru" method="post">
+<h1 class="register-title">Registratsiya</h1>
+<div class="register-content">
+<div class="register-left">
+<label class="register-content-title">Ma'lumotnoma</label>
+<input class="register-input" type="text" name="ism" placeholder="Ismingizni kiriting" minlength="3" required>
+<input class="register-input" type="date" name="sana" max="2014-01-01" required>
+<input class="register-input" type="email" name="email" placeholder="Emailingizni kiriting" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required>
+<input class="register-input" type="password" name="parol" placeholder="Parolingizni kiriting" minlength="8" autocomplete="current-password" required>
+<input class="register-input" type="tel" name="tel" placeholder="Telefon raqami" pattern="\+998[0-9]{9}" required>
+<textarea class="register-textarea" name="info" placeholder="Fikr bildiring..." minlength="10"></textarea>
+</div>
+<div class="register-right">
+<label class="register-content-title">So'rovnoma</label>
+<select class="register-select" name="jamoa" required>
+<option value="" disabled selected>Jamoa tanlang</option>
+<option>Real Madrid</option>
+<option>Barcelona</option>
+<option>Manchester City</option>
+<option>Liverpool</option>
+<option>Arsenal</option>
+</select>
+<select class="register-select" name="davlat" required>
+<option value="" disabled selected>Davlat tanlang</option>
+<option>O‘zbekiston</option>
+<option>Portugaliya</option>
+<option>Kanada</option>
+<option>Angliya</option>
+<option>Ispaniya</option>
+</select>
+<select class="register-select" name="liga" required>
+<option value="" disabled selected>Liga tanlang</option>
+<option>La Liga</option>
+<option>Premier League</option>
+<option>Serie A</option>
+<option>Bundesliga</option>
+<option>Ligue 1</option>
+</select>
+<select class="register-select" name="pozitsiya" required>
+<option value="" disabled selected>Pozitsiyani tanlang</option>
+<option>Darvozabon</option>
+<option>Himoyachi</option>
+<option>Yarim himoyachi</option>
+<option>Hujumchi</option>
+</select>
+<select class="register-select" name="futbolchi" required>
+<option value="" disabled selected>Futbolchi tanlang</option>
+<option>Cristiano Ronaldo</option>
+<option>Leonel Messi</option>
+<option>Neymar Jr</option>
+<option>Kliyan Mbappe</option>
+<option>Erling Haaland</option>
+</select>
+</div>
+</div>
+<input type="checkbox" id="modal-toggle" class="modal-toggle">
+<label for="modal-toggle" class="register-button">Ro'yhatdan o'tish</label>
+<div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+<label class="modal-overlay" for="modal-toggle"></label>
+<div class="modal-card" role="document">
+<h2 id="modal-title">Ro'yhatdan o'tishni tasdiqlaysizmi?</h2>
+<p>Ma'lumotlaringiz yuborilguncha yana bir bor tekshirib chiqing. Davom etishni xohlaysizmi?</p>
+<div class="modal-actions">
+<button type="submit" class="modal-confirm">Tasdiqlash</button>
+<label for="modal-toggle" class="modal-cancel">Bekor qilish</label>
+</div>
+<label for="modal-toggle" class="modal-close" aria-label="Yopish">&times;</label>
+</div>
+</div>
+</form>
+</div>
+</section>
+<section class="faq">
+<div class="container faq-container">
+<h1 class="faq-title">Eng ko'p beriladigan savollar</h1>
+<ul class="faq-list">
+<li class="faq-item">
+<details>
+<summary class="faq-question">Futbol Olami saytida ro'yhatdan o'tish shartmi?<span class="faq-icon">+</span></summary>
+<div class="faq-answer"><p>Yo'q, sayt materiallarini o'qish uchun ro'yhatdan o'tish shart emas, lekin so'rovnomada qatnashish uchun ma'lumotlaringizni kiritishingiz kerak.</p></div>
+</details>
+</li>
+<li class="faq-item">
+<details>
+<summary class="faq-question">Qanday jamoalar haqida ma'lumot topa olaman?<span class="faq-icon">+</span></summary>
+<div class="faq-answer"><p>Real Madrid, Barcelona, Manchester City, Liverpool, Arsenal kabi Yevropaning yetakchi jamoalari haqida statistika va yangiliklarni topasiz.</p></div>
+</details>
+</li>
+<li class="faq-item">
+<details>
+<summary class="faq-question">Highlights bo'limida nima bor?<span class="faq-icon">+</span></summary>
+<div class="faq-answer"><p>Highlights bo'limida so'nggi o'yinlarning eng qiziqarli lahzalari va gol videolari joylashtirilgan.</p></div>
+</details>
+</li>
+<li class="faq-item">
+<details>
+<summary class="faq-question">News bo'limi qanchalik tez yangilanadi?<span class="faq-icon">+</span></summary>
+<div class="faq-answer"><p>Yangiliklar futbol dunyosidagi voqealarga qarab kuniga bir necha marta yangilanib boriladi.</p></div>
+</details>
+</li>
+<li class="faq-item">
+<details>
+<summary class="faq-question">Stats bo'limida qanday statistikalar mavjud?<span class="faq-icon">+</span></summary>
+<div class="faq-answer"><p>O'yinchilar, jamoalar va liga bo'yicha gollar, assistlar, o'yinlar soni kabi statistik ko'rsatkichlar keltirilgan.</p></div>
+</details>
+</li>
+<li class="faq-item">
+<details>
+<summary class="faq-question">Ro'yhatdan o'tishda qanday ma'lumotlar so'raladi?<span class="faq-icon">+</span></summary>
+<div class="faq-answer"><p>Ism, tug'ilgan sana, email, parol, telefon raqami va sevimli jamoa, davlat, liga, pozitsiya hamda futbolchi bo'yicha tanlovlar so'raladi.</p></div>
+</details>
+</li>
+<li class="faq-item">
+<details>
+<summary class="faq-question">Mening ma'lumotlarim xavfsizmi?<span class="faq-icon">+</span></summary>
+<div class="faq-answer"><p>Ha, kiritilgan barcha shaxsiy ma'lumotlar faqat sayt ichida ishlatiladi va uchinchi tomonlarga berilmaydi.</p></div>
+</details>
+</li>
+<li class="faq-item">
+<details>
+<summary class="faq-question">Parolim uchun qanday talablar bor?<span class="faq-icon">+</span></summary>
+<div class="faq-answer"><p>Parol kamida 8 ta belgidan iborat bo'lishi kerak.</p></div>
+</details>
+</li>
+<li class="faq-item">
+<details>
+<summary class="faq-question">Telefon raqamni qanday formatda kiritish kerak?<span class="faq-icon">+</span></summary>
+<div class="faq-answer"><p>Telefon raqami +998 kod bilan boshlanib, undan keyin 9 ta raqamdan iborat bo'lishi kerak.</p></div>
+</details>
+</li>
+<li class="faq-item">
+<details>
+<summary class="faq-question">Sayt ijtimoiy tarmoqlarda ham bormi?<span class="faq-icon">+</span></summary>
+<div class="faq-answer"><p>Ha, Futbol Olami YouTube, Telegram, Instagram va Facebook orqali ham kuzatilishi mumkin.</p></div>
+</details>
+</li>
+<li class="faq-item">
+<details>
+<summary class="faq-question">Savolim bo'lsa kimga murojaat qilishim mumkin?<span class="faq-icon">+</span></summary>
+<div class="faq-answer"><p>Contact sahifasidagi forma orqali yoki ijtimoiy tarmoqlardagi sahifalarimiz orqali murojaat qilishingiz mumkin.</p></div>
+</details>
+</li>
+<li class="faq-item">
+<details>
+<summary class="faq-question">Saytdan mobil qurilmada foydalanish mumkinmi?<span class="faq-icon">+</span></summary>
+<div class="faq-answer"><p>Ha, sayt barcha qurilmalarga moslashgan bo'lib, mobil telefon va planshetlarda ham qulay ishlaydi.</p></div>
+</details>
+</li>
+</ul>
+</div>
+</section>
+</main>
+<footer>
+<div class="container header-container">
+<a class="header-logo-link" href="./Home.html">
+<span class="header-name">⚽ Futbol Olami</span>
+</a>
+<ul class="header-right hero-list">
+<li class="hero-list-item"><a target="_blank" class="hero-list-link" href="https://youtube.com"><img class="hero-list-icon youtube" src="./assests/images/YouTube.webp" alt="YouTube"></a></li>
+<li class="hero-list-item"><a target="_blank" class="hero-list-link" href="https://t.me/itdevelopersheets"><img class="hero-list-icon telegram" src="./assests/images/Telegram.jpg" alt="Telegram"></a></li>
+<li class="hero-list-item"><a target="_blank" class="hero-list-link" href="https://www.instagram.com"><img class="hero-list-icon instagram" src="./assests/images/Instagram_icon.png" alt="Instagram"></a></li>
+<li class="hero-list-item"><a target="_blank" class="hero-list-link" href="https://www.facebook.com"><img class="hero-list-icon facebook" src="./assests/images/2023_Facebook_icon.svg.webp" alt="Facebook"></a></li>
+<li class="hero-list-item"><a target="_blank" class="hero-list-link" href="./Contact.html"><img class="hero-list-icon contact" src="./assests/images/contact.png" alt="Contact"></a></li>
+</ul>
+</div>
+</footer>
+<a class="top-link" href="#header-part">⮙</a>
+<script src="./js/boots.js"></script>
+<script src="./js/script.js"></script>
+</body>
+</html>
