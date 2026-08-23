@@ -611,6 +611,126 @@ details[open] .faq-icon{
     box-shadow: 0 0 12px 3px #00ffaa, 0 0 24px 6px rgba(0, 255, 170, 0.5);
     transform: translateY(-5px);
 }
+.modal-toggle{
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+.modal{
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.modal-toggle:checked ~ .modal{
+    display: flex;
+}
+.modal-overlay{
+    position: absolute;
+    inset: 0;
+    background: rgba(2,6,3,0.6);
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+}
+.modal-card{
+    position: relative;
+    width: min(520px, 92%);
+    background: linear-gradient(180deg, #0d3925 0%, #072718 100%);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 6px 18px rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.12);
+    transform: translateY(-12px);
+    opacity: 0;
+    transition: transform .28s cubic-bezier(.2,.9,.2,1), opacity .28s ease;
+    color: #eaf7ee;
+    z-index: 2100;
+}
+.modal-toggle:checked ~ .modal .modal-card{
+    transform: translateY(0);
+    opacity: 1;
+}
+.modal-card h2{
+    margin-bottom: 8px;
+    font-family: "Teko", sans-serif;
+    font-size: 22px;
+    color: #f5f4e6;
+    text-transform: uppercase;
+}
+.modal-card p{
+    color: #e1f7e8;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    font-size: 15px;
+}
+.modal-actions{
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 6px;
+}
+.modal-confirm{
+    cursor: pointer;
+    background: linear-gradient(90deg,#22c55e,#1fa14b);
+    color: #04140d;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-family: "Teko", sans-serif;
+    font-size: 15px;
+    box-shadow: 0 6px 18px rgba(34,197,94,0.18);
+    transition: all .18s ease;
+}
+.modal-confirm:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(34,197,94,0.22);
+}
+.modal-cancel{
+    cursor: pointer;
+    display: inline-block;
+    padding: 9px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #eaf7ee;
+    background: transparent;
+    font-weight: 600;
+    transition: all .18s ease;
+}
+.modal-cancel:hover{
+    background: rgba(255,255,255,0.03);
+    color: #f5c518;
+}
+.modal-close{
+    position: absolute;
+    right: 12px;
+    top: 8px;
+    font-size: 26px;
+    line-height: 20px;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    color: #f5f5f5;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.04);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-close:hover{
+    color: #ffdd57;
+    background: rgba(255,255,255,0.02);
+}
 @media(max-width: 1024px){
     html{
         scroll-padding-top: 72px;
@@ -895,154 +1015,6 @@ details[open] .faq-icon{
         font-size: 11px;
     }
 }
-
-/* --------------------------
-   Modal (pure CSS) styles
-   -------------------------- */
-
-/* hidden checkbox */
-.modal-toggle{
-    position: absolute;
-    left: -9999px;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
-    pointer-events: none;
-}
-
-/* modal container (hidden by default) */
-.modal{
-    position: fixed;
-    inset: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-/* show modal when checkbox is checked (general sibling) */
-.modal-toggle:checked ~ .modal{
-    display: flex;
-}
-
-/* overlay that dims the background; clicking it (it's a label) will close the modal */
-.modal-overlay{
-    position: absolute;
-    inset: 0;
-    background: rgba(2,6,3,0.6);
-    backdrop-filter: blur(4px);
-    cursor: pointer;
-}
-
-/* card */
-.modal-card{
-    position: relative;
-    width: min(520px, 92%);
-    background: linear-gradient(180deg, #0d3925 0%, #072718 100%);
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 6px 18px rgba(34,197,94,0.08);
-    border: 1px solid rgba(34,197,94,0.12);
-    transform: translateY(-12px);
-    opacity: 0;
-    transition: transform .28s cubic-bezier(.2,.9,.2,1), opacity .28s ease;
-    color: #eaf7ee;
-    z-index: 2100;
-}
-
-/* smooth entrance */
-.modal-toggle:checked ~ .modal .modal-card{
-    transform: translateY(0);
-    opacity: 1;
-}
-
-/* modal content */
-.modal-card h2{
-    margin-bottom: 8px;
-    font-family: "Teko", sans-serif;
-    font-size: 22px;
-    color: #f5f4e6;
-    text-transform: uppercase;
-}
-.modal-card p{
-    color: #e1f7e8;
-    line-height: 1.6;
-    margin-bottom: 18px;
-    font-size: 15px;
-}
-
-/* actions */
-.modal-actions{
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    align-items: center;
-    margin-top: 6px;
-}
-
-/* confirm submit (styled as primary) */
-.modal-confirm{
-    cursor: pointer;
-    background: linear-gradient(90deg,#22c55e,#1fa14b);
-    color: #04140d;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-family: "Teko", sans-serif;
-    font-size: 15px;
-    box-shadow: 0 6px 18px rgba(34,197,94,0.18);
-    transition: all .18s ease;
-}
-.modal-confirm:hover{
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(34,197,94,0.22);
-}
-
-/* cancel action (label that closes the modal) */
-.modal-cancel{
-    cursor: pointer;
-    display: inline-block;
-    padding: 9px 14px;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.12);
-    color: #eaf7ee;
-    background: transparent;
-    font-weight: 600;
-    transition: all .18s ease;
-}
-.modal-cancel:hover{
-    background: rgba(255,255,255,0.03);
-    color: #f5c518;
-}
-
-/* close X button in top-right */
-.modal-close{
-    position: absolute;
-    right: 12px;
-    top: 8px;
-    font-size: 26px;
-    line-height: 20px;
-    width: 36px;
-    height: 36px;
-    text-align: center;
-    color: #f5f5f5;
-    background: transparent;
-    border-radius: 8px;
-    cursor: pointer;
-    border: 1px solid rgba(255,255,255,0.04);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-.modal-close:hover{
-    color: #ffdd57;
-    background: rgba(255,255,255,0.02);
-}
-
-/* responsive tweaks */
 @media(max-width: 480px){
     .modal-card{
         padding: 18px;
