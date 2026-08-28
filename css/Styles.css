@@ -29,10 +29,18 @@ a{
     transition: all .5s ease;
     color: white;
 }
-.header-logo-link, .header-nav-link, .contact-link, .hero-list-link, .cta-link, .cta-icon-link, .top-link{
+.header-logo-link,
+.header-nav-link,
+.contact-link,
+.hero-list-link,
+.cta-link,
+.cta-icon-link,
+.top-link{
     padding: 6px 10px;
 }
-h1, h2, h3{
+h1,
+h2,
+h3{
     font-family: "Audiowide", sans-serif;
 }
 img{
@@ -47,8 +55,6 @@ header{
     position: sticky;
     top: 0;
     left: 0;
-    width: 100%;
-    z-index: 1000;
 }
 .header-container{
     display: flex;
@@ -221,13 +227,16 @@ header{
 .hero-list-icon:hover{
     transform: translateY(-3px);
 }
-.youtube:hover, .instagram:hover{
+.youtube:hover,
+.instagram:hover{
     box-shadow: 0 0 14px rgba(34, 197, 94, .5);
 }
 .telegram{
     border-radius: 50%;
 }
-.telegram:hover, .facebook:hover, .contact:hover{
+.telegram:hover,
+.facebook:hover,
+.contact:hover{
     filter: drop-shadow(0 0 14px rgba(34, 197, 94, 0.5));
 }
 .hero-title{
@@ -389,7 +398,8 @@ header{
     aspect-ratio: 1 / 1;
     overflow: hidden;
 }
-.grid-list-img, .grid-list-video{
+.grid-list-img,
+.grid-list-video{
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -525,13 +535,15 @@ form:hover{
     gap: 50px;
     flex-wrap: wrap;
 }
-.register-left, .register-right{
+.register-left,
+.register-right{
     display: flex;
     gap: 25px;
     flex-direction: column;
     margin-bottom: 40px;
 }
-.register-input, .register-textarea{
+.register-input,
+.register-textarea{
     width: 240px;
     height: 35px;
     border: none;
@@ -552,6 +564,39 @@ input[type="date"]:invalid{
 }
 input[type="date"]:valid{
     border: 2px solid #22c55e;
+}
+.password-wrapper{
+    position: relative;
+    width: 240px;
+}
+.password-wrapper .register-input{
+    width: 100%;
+    padding-right: 42px;
+}
+.password-toggle{
+    position: absolute;
+    right: 4px;
+    bottom: 7px;
+    width: 32px;
+    height: 25px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #8fa598;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s ease;
+}
+.password-toggle:hover{
+    color: #22c55e;
+    transform: scale(1.1);
+}
+.password-toggle:focus{
+    outline: none;
+    color: #22c55e;
 }
 .register-select{
     cursor: pointer;
@@ -859,7 +904,7 @@ details[open] .faq-icon{
     color: #ffdd57;
     background: rgba(255,255,255,0.02);
 }
-@media(max-width: 1024px){
+@media (max-width: 1024px){
     html{
         scroll-padding-top: 72px;
     }
@@ -916,7 +961,7 @@ details[open] .faq-icon{
         font-size: 20px;
     }
 }
-@media(max-width: 950px){
+@media (max-width: 950px){
     .header-nav-link{
         display: none;
     }
@@ -924,7 +969,7 @@ details[open] .faq-icon{
         display: inline-block;
     }
 }
-@media(max-width: 900px){
+@media (max-width: 900px){
     .news-category{
         display: none;
     }
@@ -971,7 +1016,7 @@ details[open] .faq-icon{
         flex-direction: column;
     }
 }
-@media(max-width: 810px){
+@media (max-width: 810px){
     .contact-link{
         padding: 8px 14px;
         font-size: 10px;
@@ -1017,13 +1062,25 @@ details[open] .faq-icon{
         align-items: center;
         text-align: center;
     }
-    ::placeholder{
+    .password-wrapper{
+        width: 100%;
+        max-width: 280px;
+    }
+    .password-wrapper .register-input{
+        width: 100%;
+        max-width: 280px;
+    }
+    .password-toggle{
+        right: 3px;
+    }
+    *::placeholder{
         text-align: center;
     }
     .register-select{
         width: 250px;
     }
-    .register-input, .register-textarea{
+    .register-input,
+    .register-textarea{
         width: 100%;
         max-width: 280px;
     }
@@ -1056,7 +1113,7 @@ details[open] .faq-icon{
         right: 15px;
     }
 }
-@media(max-width: 750px){
+@media (max-width: 750px){
     footer .header-container{
         flex-direction: column;
         gap: 30px;
@@ -1067,7 +1124,7 @@ details[open] .faq-icon{
         font-size: 15px;
     }
 }
-@media(max-width: 480px){
+@media (max-width: 480px){
     .modal-card{
         padding: 18px;
     }
@@ -1081,12 +1138,13 @@ details[open] .faq-icon{
         flex-direction: column;
         align-items: stretch;
     }
-    .modal-confirm, .modal-cancel{
+    .modal-confirm,
+    .modal-cancel{
         width: 100%;
         text-align: center;
     }
 }
-@media(max-width: 450px){
+@media (max-width: 450px){
     html{
         scroll-padding-top: 58px;
     }
@@ -1138,6 +1196,12 @@ details[open] .faq-icon{
     }
     .register-content-title{
         font-size: 11px;
+    }
+    .password-wrapper{
+        max-width: 280px;
+    }
+    .password-toggle{
+        font-size: 16px;
     }
     .faq-title{
         font-size: 17px;
