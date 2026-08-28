@@ -37,6 +37,7 @@
 </head>
 <body>
 <header>
+<input type="checkbox" id="menuToggle" class="modal-toggle">
 <div class="container header-container">
 <a class="header-logo-link" href="./index.html"><span class="header-name">⚽ Futbol Olami</span></a>
 <div class="header-right">
@@ -47,8 +48,22 @@
 <a class="header-nav-link" href="./News.html"><img class="nav-link-icon" src="./assests/images/news.png" alt="home"><span>News</span></a>
 <a class="header-nav-link" href="./Stats.html"><img class="nav-link-icon" src="./assests/images/stats.png" alt="home"><span>Stats</span></a>
 <a class="contact-link" href="./Contact.html"><span>Contact</span></a>
+<label for="menuToggle">
 <img class="hamburger" src="./assests/images/hamburger.png" alt="menu">
+</label>
 </div>
+</div>
+<div class="mobile-menu-overlay">
+<label for="menuToggle" class="mobile-menu-overlay-bg"></label>
+<nav class="mobile-menu-card">
+<label for="menuToggle" class="mobile-menu-close">✕</label>
+<a class="mobile-menu-link" href="./index.html">Home</a>
+<a class="mobile-menu-link" href="./About.html">About</a>
+<a class="mobile-menu-link" href="./Highlights.html">Highlights</a>
+<a class="mobile-menu-link" href="./News.html">News</a>
+<a class="mobile-menu-link" href="./Stats.html">Stats</a>
+<a class="mobile-menu-link" href="./Contact.html">Contact</a>
+</nav>
 </div>
 </header>
 <main>

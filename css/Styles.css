@@ -111,6 +111,85 @@ header{
     height: 50px;
     cursor: pointer;
 }
+.mobile-menu-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(2,6,3,.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: flex-end;
+    z-index: 3000;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .3s ease, visibility .3s ease;
+}
+.mobile-menu-overlay-bg{
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+}
+.hamburger-label{
+    cursor: pointer;
+}
+#menuToggle:checked ~ .mobile-menu-overlay{
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+.mobile-menu-card{
+    width: min(300px, 80%);
+    height: 100%;
+    background: linear-gradient(180deg, #0d3925 0%, #072718 100%);
+    padding: 90px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transform: translateX(100%);
+    transition: transform .35s cubic-bezier(.2,.9,.2,1);
+    box-shadow: -10px 0 40px rgba(0,0,0,.5);
+    border-left: 1px solid rgba(34,197,94,.18);
+    position: relative;
+}
+#menuToggle:checked ~ .mobile-menu-overlay .mobile-menu-card{
+    transform: translateX(0);
+}
+.mobile-menu-link{
+    font-family: "Teko", sans-serif;
+    font-size: 22px;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: #8fa598;
+    padding: 14px 10px;
+    border-bottom: 1px solid rgba(238,245,238,.08);
+    transition: all .3s ease;
+}
+.mobile-menu-link:hover{
+    color: #22c55e;
+    padding-left: 18px;
+}
+.mobile-menu-close{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: transparent;
+    color: #f4faf6;
+    font-size: 20px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .3s ease;
+}
+.mobile-menu-close:hover{
+    color: #f5c518;
+    border-color: #f5c518;
+    background: rgba(255,255,255,.03);
+}
 .hero{
     background-color: #0b3020;
 }
@@ -275,6 +354,9 @@ header{
     letter-spacing: .01em;
     color: #eef5ee;
     margin-bottom: 40px;
+}
+.golli-vaziyatlar{
+    padding-top: 30px;
 }
 .grid-list{
     display: grid;
@@ -520,6 +602,52 @@ input[type="date"]:valid{
     color: #22c55e;
     text-transform: uppercase;
     letter-spacing: .03em;
+}
+.register-input,
+.register-textarea{
+    transition: all .3s ease;
+    animation: inputPulse 2.5s ease-in-out infinite;
+}
+.register-input::placeholder,
+.register-textarea::placeholder{
+    color: #8fa598;
+    transition: all .3s ease;
+}
+@keyframes inputPulse{
+    0%,100%{
+        border-bottom-color: rgba(238,245,238,.25);
+        box-shadow: 0 0 0 rgba(34,197,94,0);
+    }
+    50%{
+        border-bottom-color: rgba(34,197,94,.55);
+        box-shadow: 0 5px 14px -10px rgba(34,197,94,.7);
+    }
+}
+.register-input:hover,
+.register-textarea:hover{
+    border-bottom-color: #22c55e;
+    background: rgba(34,197,94,.03);
+    box-shadow: 0 0 18px rgba(34,197,94,.25);
+    animation: none;
+}
+.register-input:hover::placeholder,
+.register-textarea:hover::placeholder{
+    color: #22c55e;
+    text-shadow: 0 0 8px rgba(34,197,94,.6);
+}
+.register-input:focus,
+.register-textarea:focus{
+    border-bottom-color: #22c55e;
+    background: rgba(34,197,94,.04);
+    box-shadow: 0 8px 20px -10px rgba(34,197,94,.9),0 0 14px rgba(34,197,94,.12);
+    transform: translateY(-2px);
+    animation: none;
+}
+.register-input:focus::placeholder,
+.register-textarea:focus::placeholder{
+    color: rgba(34,197,94,.4);
+    text-shadow: none;
+    letter-spacing: .5px;
 }
 .faq{
     padding: 60px 0;
@@ -788,6 +916,14 @@ details[open] .faq-icon{
         font-size: 20px;
     }
 }
+@media(max-width: 950px){
+    .header-nav-link{
+        display: none;
+    }
+    .hamburger{
+        display: inline-block;
+    }
+}
 @media(max-width: 900px){
     .news-category{
         display: none;
@@ -796,6 +932,7 @@ details[open] .faq-icon{
         grid-template-columns: repeat(1, 1fr);
         padding-left: 20px;
         padding-right: 20px;
+        margin-top: -15px;
     }
     .news-grid-img{
         width: 800px;
@@ -835,21 +972,6 @@ details[open] .faq-icon{
     }
 }
 @media(max-width: 810px){
-    html{
-        scroll-padding-top: 66px;
-    }
-    .header-nav-link{
-        display: none;
-    }
-    footer .header-nav-link{
-        display: inline-block;
-    }
-    .hamburger{
-        display: inline-block;
-    }
-    .header-right{
-        gap: 15px;
-    }
     .contact-link{
         padding: 8px 14px;
         font-size: 10px;
@@ -944,8 +1066,24 @@ details[open] .faq-icon{
     .header-name{
         font-size: 15px;
     }
-    .header-nav-link{
-        font-size: 12px;
+}
+@media(max-width: 480px){
+    .modal-card{
+        padding: 18px;
+    }
+    .modal-card h2{
+        font-size: 18px;
+    }
+    .modal-card p{
+        font-size: 14px;
+    }
+    .modal-actions{
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .modal-confirm, .modal-cancel{
+        width: 100%;
+        text-align: center;
     }
 }
 @media(max-width: 450px){
@@ -954,9 +1092,6 @@ details[open] .faq-icon{
     }
     .header-name{
         font-size: 13px;
-    }
-    .header-nav-link{
-        font-size: 10px;
     }
     .hero-title{
         font-size: 13px;
@@ -983,13 +1118,20 @@ details[open] .faq-icon{
     .contact-link{
         font-size: 8px;
     }
-    header .contact-link{
+    .contact-link{
         display: none;
     }
     .hamburger{
         margin-top: 15px;
         width: 40px;
         height: 40px;
+    }
+    .mobile-menu-card{
+        width: 78%;
+        padding: 80px 18px 18px;
+    }
+    .mobile-menu-link{
+        font-size: 18px;
     }
     .register-title{
         font-size: 16px;
@@ -1013,24 +1155,5 @@ details[open] .faq-icon{
     }
     .faq-answer p{
         font-size: 11px;
-    }
-}
-@media(max-width: 480px){
-    .modal-card{
-        padding: 18px;
-    }
-    .modal-card h2{
-        font-size: 18px;
-    }
-    .modal-card p{
-        font-size: 14px;
-    }
-    .modal-actions{
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .modal-confirm, .modal-cancel{
-        width: 100%;
-        text-align: center;
     }
 }
