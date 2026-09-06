@@ -1,25 +1,13 @@
 {
-  "name": "football",
+  "name": "futbol-olami",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "private": true,
+  "main": "api/server.js",
   "scripts": {
-    "dev": "node server.js"
+    "start": "node api/server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Ilhomjonov2011/Futbol.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/Ilhomjonov2011/Futbol/issues"
-  },
-  "homepage": "https://github.com/Ilhomjonov2011/Futbol#readme",
   "dependencies": {
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1"
+    "express": "^4.19.2",
+    "dotenv": "^16.4.5"
   }
 }
