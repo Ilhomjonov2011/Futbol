@@ -267,6 +267,54 @@ header{
 .hero-text-link:hover{
     color: #f5c518;
 }
+.about{
+    padding: 60px 0;
+    background: linear-gradient(135deg, #04140d, #0b3020);
+    padding: 20px 20px;
+}
+.about-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+.about .card{
+    padding: 25px;
+    background: rgba(16, 59, 40, .9);
+    border: 1px solid rgba(34, 197, 94, .25);
+    border-radius: 12px;
+    transition: .3s ease;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.about .card:hover{
+    transform: translateY(-5px);
+    border-color: #22c55e;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .3);
+}
+.about .card h2{
+    margin-bottom: 12px;
+    color: #f5c518;
+    font-size: 20px;
+}
+.about .card p{
+    color: #eaf7ee;
+    font-size: 14px;
+    line-height: 1.7;
+}
+.about .cta-link{
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 14px;
+    color: #22c55e;
+    border: 1px solid #22c55e;
+    border-radius: 7px;
+}
+.about .cta-link:hover{
+    color: #04140d;
+    background: #22c55e;
+}
 .news{
     padding-top: 50px;
     padding-bottom: 50px;
@@ -904,6 +952,11 @@ details[open] .faq-icon{
     color: #ffdd57;
     background: rgba(255,255,255,0.02);
 }
+@media (max-width: 1300px){
+    .about-grid{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
 @media (max-width: 1024px){
     html{
         scroll-padding-top: 72px;
@@ -1014,6 +1067,9 @@ details[open] .faq-icon{
     }
     .hero-container{
         flex-direction: column;
+    }
+    .about-grid{
+        grid-template-columns: repeat(1, 1fr);
     }
 }
 @media (max-width: 810px){
