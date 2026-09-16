@@ -289,9 +289,7 @@ header{
     margin-right: auto;
 }
 .about .card:hover{
-    transform: translateY(-5px);
-    border-color: #22c55e;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, .3);
+    border: 1px solid #22c55e;
 }
 .about .card h2{
     margin-bottom: 12px;
@@ -304,16 +302,18 @@ header{
     line-height: 1.7;
 }
 .about .cta-link{
-    display: inline-block;
     margin-top: 15px;
     padding: 8px 14px;
-    color: #22c55e;
-    border: 1px solid #22c55e;
+    background-color: white;
+    color: black;
+    font-weight: 650;
     border-radius: 7px;
 }
 .about .cta-link:hover{
-    color: #04140d;
-    background: #22c55e;
+    border: 1px solid #22c55e;
+    color: #22c55e;
+    background-color: transparent;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .3);
 }
 .news{
     padding-top: 50px;
