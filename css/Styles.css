@@ -224,12 +224,10 @@ header{
     border-radius: 6px;
     transition: 0.5s ease;
 }
-.hero-list-icon:hover{
-    transform: translateY(-3px);
-}
 .youtube:hover,
 .instagram:hover{
-    box-shadow: 0 0 14px rgba(34, 197, 94, .5);
+    box-shadow: 0 0 6px #22c55e, 0 0 14px rgba(34, 197, 94, .7), 0 0 25px rgba(34, 197, 94, .45);
+    transform: translateY(-5px) scale(1.08) rotate(10deg);
 }
 .telegram{
     border-radius: 50%;
@@ -237,7 +235,8 @@ header{
 .telegram:hover,
 .facebook:hover,
 .contact:hover{
-    filter: drop-shadow(0 0 14px rgba(34, 197, 94, 0.5));
+    filter: drop-shadow(0 0 6px #22c55e) drop-shadow(0 0 14px rgba(34, 197, 94, .7)) drop-shadow(0 0 25px rgba(34, 197, 94, .45));
+    transform: translateY(-5px) scale(1.08) rotate(10deg);
 }
 .hero-title{
     font-size: 30px;
@@ -757,11 +756,15 @@ body.pm-open{
     border-radius: 8px;
     transition: all .4s ease;
 }
-.cta-link:hover{
+.tel:hover{
     color: #22c55e;
     border-color: #22c55e;
     background: rgba(34, 197, 94, .05);
-    box-shadow: 0 0 18px rgba(34, 197, 94, .15);
+}
+.ytb:hover {
+    color: #ff0000;
+    border-color: #ff0000;
+    background: rgba(255, 0, 0, .05);
 }
 .cta-icon-link{
     display: none;
@@ -782,7 +785,6 @@ body.pm-open{
     filter: drop-shadow(0 0 6px #22c55e) drop-shadow(0 0 14px rgba(34, 197, 94, .7)) drop-shadow(0 0 25px rgba(34, 197, 94, .45));
     transform: translateY(-5px) scale(1.08) rotate(10deg);
 }
-
 .tel-icon{
     border-radius: 50%;
 }
