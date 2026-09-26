@@ -2,9 +2,13 @@ document.addEventListener("DOMContentLoaded", () => {
     initializePage();
 });
 
-/* =========================================================
-   ESKI JS
-   ========================================================= */
+function debounce(fn, delay = 200) {
+    let timer = null;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), delay);
+    };
+}
 
 function applyBackgrounds() {
     const backgrounds = {
@@ -17,7 +21,9 @@ function applyBackgrounds() {
     };
 
     Object.entries(backgrounds).forEach(([selector, image]) => {
-        document.querySelectorAll(selector).forEach(element => {
+        document.querySelectorAll(selector).forEach((element) => {
+            if (element.dataset.bgReady === "true") return;
+            element.dataset.bgReady = "true";
             element.style.backgroundImage = `url("${image}")`;
         });
     });
@@ -37,6 +43,14 @@ function initializeMobileMenu() {
         link.addEventListener("click", closeMenu);
     });
 
+    document.addEventListener("click", (event) => {
+        if (!toggle.checked) return;
+        const menu = document.querySelector(".mobile-menu, .menu, nav");
+        if (menu && !menu.contains(event.target) && event.target !== toggle) {
+            closeMenu();
+        }
+    });
+
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && toggle.checked) {
             closeMenu();
@@ -45,58 +59,102 @@ function initializeMobileMenu() {
 }
 
 function initializePassword() {
-    const passwordInput = document.querySelector("#password");
-    const toggle = document.querySelector("#togglePassword");
-    if (!passwordInput || !toggle) return;
-    if (toggle.dataset.ready === "true") return;
-    toggle.dataset.ready = "true";
+    const pairs = [];
 
-    toggle.addEventListener("click", () => {
-        const isPassword = passwordInput.type === "password";
-        passwordInput.type = isPassword ? "text" : "password";
-        toggle.textContent = isPassword ? "🙈" : "👁";
-        toggle.setAttribute(
-            "aria-label",
-            isPassword ? "Parolni yashirish" : "Parolni ko‘rsatish"
-        );
+    const legacyInput = document.querySelector("#password");
+    const legacyToggle = document.querySelector("#togglePassword");
+    if (legacyInput && legacyToggle) {
+        pairs.push([legacyInput, legacyToggle]);
+    }
+
+    document.querySelectorAll("[data-toggle-password]").forEach((toggle) => {
+        const targetId = toggle.dataset.togglePassword;
+        const input = targetId ? document.getElementById(targetId) : null;
+        if (input) pairs.push([input, toggle]);
+    });
+
+    pairs.forEach(([passwordInput, toggle]) => {
+        if (toggle.dataset.ready === "true") return;
+        toggle.dataset.ready = "true";
+
+        toggle.addEventListener("click", () => {
+            const isPassword = passwordInput.type === "password";
+            passwordInput.type = isPassword ? "text" : "password";
+            toggle.textContent = isPassword ? "🙈" : "👁";
+            toggle.setAttribute(
+                "aria-label",
+                isPassword ? "Parolni yashirish" : "Parolni ko‘rsatish"
+            );
+        });
     });
 }
 
-function createNotification() {
-    let notification = document.querySelector("#notification");
-    if (notification) return notification;
+let notificationStack = null;
 
-    notification = document.createElement("div");
-    notification.id = "notification";
-    notification.style.position = "fixed";
-    notification.style.top = "20px";
-    notification.style.right = "20px";
-    notification.style.zIndex = "99999";
+function createNotificationStack() {
+    if (notificationStack) return notificationStack;
+
+    notificationStack = document.createElement("div");
+    notificationStack.id = "notificationStack";
+    notificationStack.style.position = "fixed";
+    notificationStack.style.top = "20px";
+    notificationStack.style.right = "20px";
+    notificationStack.style.zIndex = "99999";
+    notificationStack.style.display = "flex";
+    notificationStack.style.flexDirection = "column";
+    notificationStack.style.gap = "10px";
+    notificationStack.style.maxWidth = "350px";
+    document.body.appendChild(notificationStack);
+    return notificationStack;
+}
+
+function showNotification(message, type = "success", duration = 4000) {
+    const stack = createNotificationStack();
+
+    const notification = document.createElement("div");
+    notification.textContent = message;
     notification.style.padding = "15px 20px";
     notification.style.borderRadius = "10px";
     notification.style.color = "#fff";
     notification.style.fontWeight = "600";
-    notification.style.display = "none";
-    notification.style.maxWidth = "350px";
     notification.style.boxShadow = "0 5px 20px rgba(0,0,0,0.25)";
-    document.body.appendChild(notification);
-    return notification;
+    notification.style.background = type === "success" ? "#16a34a" : "#dc2626";
+    notification.style.opacity = "0";
+    notification.style.transform = "translateX(20px)";
+    notification.style.transition = "opacity 0.25s ease, transform 0.25s ease";
+    notification.style.cursor = "pointer";
+
+    notification.addEventListener("click", () => removeNotification(notification));
+    stack.appendChild(notification);
+
+    requestAnimationFrame(() => {
+        notification.style.opacity = "1";
+        notification.style.transform = "translateX(0)";
+    });
+
+    const timer = setTimeout(() => removeNotification(notification), duration);
+    notification.dataset.timer = String(timer);
 }
 
-function showNotification(message, type = "success") {
-    const notification = createNotification();
-    notification.textContent = message;
-    notification.style.display = "block";
+function removeNotification(notification) {
+    if (!notification || !notification.isConnected) return;
+    clearTimeout(Number(notification.dataset.timer));
+    notification.style.opacity = "0";
+    notification.style.transform = "translateX(20px)";
+    setTimeout(() => notification.remove(), 250);
+}
 
-    if (type === "success") {
-        notification.style.background = "#16a34a";
-    } else {
-        notification.style.background = "#dc2626";
-    }
+function normalizePhone(raw) {
+    const digits = (raw || "").replace(/[\s\-()]/g, "");
+    if (/^\+998\d{9}$/.test(digits)) return digits;
+    if (/^998\d{9}$/.test(digits)) return `+${digits}`;
+    if (/^\d{9}$/.test(digits)) return `+998${digits}`;
+    return digits;
+}
 
-    setTimeout(() => {
-        notification.style.display = "none";
-    }, 4000);
+function isValidEmail(value) {
+    if (!value) return true;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
 function initializeTelegramForm() {
@@ -109,13 +167,14 @@ function initializeTelegramForm() {
         event.preventDefault();
 
         const submitButton = form.querySelector('button[type="submit"]');
+        if (submitButton && submitButton.disabled) return;
 
         try {
             const ism = form.querySelector('[name="ism"]')?.value.trim() || "";
             const sana = form.querySelector('[name="sana"]')?.value || "";
             const email = form.querySelector('[name="email"]')?.value.trim() || "";
             const parol = form.querySelector('[name="parol"]')?.value || "";
-            const tel = form.querySelector('[name="tel"]')?.value.trim() || "";
+            const telRaw = form.querySelector('[name="tel"]')?.value.trim() || "";
             const jamoa = form.querySelector('[name="jamoa"]')?.value.trim() || "";
             const davlat = form.querySelector('[name="davlat"]')?.value.trim() || "";
             const liga = form.querySelector('[name="liga"]')?.value.trim() || "";
@@ -125,33 +184,44 @@ function initializeTelegramForm() {
 
             if (!ism) {
                 showNotification("Ism familiyangizni kiriting.", "error");
+                form.querySelector('[name="ism"]')?.focus();
                 return;
             }
 
-            if (!parol) {
-                showNotification("Parol kiriting.", "error");
+            if (!parol || parol.length < 6) {
+                showNotification("Parol kamida 6 ta belgidan iborat bo‘lishi kerak.", "error");
+                form.querySelector('[name="parol"]')?.focus();
                 return;
             }
 
-            if (!tel) {
+            if (!telRaw) {
                 showNotification("Telefon raqamingizni kiriting.", "error");
+                form.querySelector('[name="tel"]')?.focus();
                 return;
             }
 
-            const phonePattern = /^\+998[0-9]{9}$/;
-            if (!phonePattern.test(tel)) {
+            const tel = normalizePhone(telRaw);
+            if (!/^\+998\d{9}$/.test(tel)) {
                 showNotification("Telefon raqami +998901234567 ko‘rinishida bo‘lishi kerak.", "error");
+                form.querySelector('[name="tel"]')?.focus();
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                showNotification("Email manzili noto‘g‘ri kiritilgan.", "error");
+                form.querySelector('[name="email"]')?.focus();
                 return;
             }
 
             if (!info) {
                 showNotification("Qo‘shimcha ma'lumot maydonini to‘ldiring.", "error");
+                form.querySelector('[name="info"]')?.focus();
                 return;
             }
 
             if (submitButton) {
                 submitButton.disabled = true;
-                submitButton.dataset.originalText = submitButton.textContent;
+                submitButton.dataset.originalText = submitButton.dataset.originalText || submitButton.textContent;
                 submitButton.textContent = "Yuborilmoqda...";
             }
 
@@ -169,13 +239,22 @@ function initializeTelegramForm() {
                 info
             };
 
-            const response = await fetch("/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            });
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+            let response;
+            try {
+                response = await fetch("/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data),
+                    signal: controller.signal
+                });
+            } finally {
+                clearTimeout(timeoutId);
+            }
 
             const responseText = await response.text();
             let result = {};
@@ -203,16 +282,17 @@ function initializeTelegramForm() {
                 modalToggle.checked = false;
             }
         } catch (error) {
+            const message =
+                error.name === "AbortError"
+                    ? "Server javob berishda kechikmoqda. Qaytadan urinib ko‘ring."
+                    : error.message || "Server bilan bog‘lanishda xatolik yuz berdi.";
             console.error("Register error:", error);
-            showNotification(
-                error.message || "Server bilan bog‘lanishda xatolik yuz berdi.",
-                "error"
-            );
+            showNotification(message, "error");
         } finally {
-            if (submitButton) {
-                submitButton.disabled = false;
-                submitButton.textContent =
-                    submitButton.dataset.originalText || "Tasdiqlash";
+            const submitButtonEl = form.querySelector('button[type="submit"]');
+            if (submitButtonEl) {
+                submitButtonEl.disabled = false;
+                submitButtonEl.textContent = submitButtonEl.dataset.originalText || "Tasdiqlash";
             }
         }
     });
@@ -414,6 +494,15 @@ function createPlayerModal() {
 
     modal.querySelector(".pm-video").addEventListener("error", handlePlayerVideoError);
 
+    modal.querySelector(".pm-video").addEventListener("ended", () => {
+        const player = PLAYERS[playerModalState.key];
+        if (!player) return;
+        const nextIndex = playerModalState.index + 1;
+        if (player.videos[nextIndex]) {
+            selectPlayerVideo(nextIndex, false);
+        }
+    });
+
     return modal;
 }
 
@@ -568,6 +657,18 @@ function handlePlayerModalKeys(event) {
         return;
     }
 
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        const player = PLAYERS[playerModalState.key];
+        if (!player) return;
+        const delta = event.key === "ArrowDown" ? 1 : -1;
+        const nextIndex = playerModalState.index + delta;
+        if (player.videos[nextIndex]) {
+            event.preventDefault();
+            selectPlayerVideo(nextIndex, false);
+        }
+        return;
+    }
+
     if (event.key !== "Tab") return;
 
     const focusable = Array.from(
@@ -615,19 +716,6 @@ function initializePlayerModal() {
     });
 }
 
-/* =========================================================
-   YANGI JS: NEWS FILTER
-   ---------------------------------------------------------
-   Tugmalar (Barchasi, Bugungi xabarlar, So'nggi yangiliklar,
-   Eng ko'p ko'rilgan) va "Ko'proq" select'i orqali yangiliklar
-   filtrlanadi.
-
-   Kategoriyalarni 2 usulda berish mumkin:
-   1) HTML'da:  <li class="news-grid-item" data-category="today transfer">
-   2) HTML'ga tegmasdan: pastdagi NEWS_DEFAULT_CATEGORIES (indeks bo'yicha)
-   ========================================================= */
-
-// Tugma / option matnidan -> filter kaliti
 const NEWS_FILTER_MAP = {
     "barchasi": "all",
     "bugungi xabarlar": "today",
@@ -640,13 +728,14 @@ const NEWS_FILTER_MAP = {
     "statistika": "stats"
 };
 
-// HTML'da data-category bo'lmasa, shu ro'yxat ishlatiladi (1-yangilik = 0-indeks)
 const NEWS_DEFAULT_CATEGORIES = [
-    ["latest", "transfer"],            // Elliot Anderson
-    ["today", "analysis"],             // Morgan Rogers
-    ["popular", "stats"],              // Sandro Tonali
-    ["latest", "popular", "review"]    // Bruno Guimaraes
+    ["latest", "transfer"],
+    ["today", "analysis"],
+    ["popular", "stats"],
+    ["latest", "popular", "review"]
 ];
+
+const NEWS_FILTER_STORAGE_KEY = "newsFilter";
 
 function normalizeNewsText(text) {
     return (text || "")
@@ -668,6 +757,22 @@ function getNewsItemCategories(item, index) {
     return NEWS_DEFAULT_CATEGORIES[index] || [];
 }
 
+function getStoredNewsFilter() {
+    try {
+        return window.localStorage.getItem(NEWS_FILTER_STORAGE_KEY);
+    } catch (error) {
+        return null;
+    }
+}
+
+function storeNewsFilter(filter) {
+    try {
+        window.localStorage.setItem(NEWS_FILTER_STORAGE_KEY, filter);
+    } catch (error) {
+        return;
+    }
+}
+
 function initializeNewsFilter() {
     const grid = document.querySelector("#news");
     const bar = document.querySelector(".news-category");
@@ -679,13 +784,11 @@ function initializeNewsFilter() {
     const select = bar.querySelector(".register-select");
     const items = Array.from(grid.querySelectorAll(".news-grid-item"));
 
-    // Har bir yangilikka kategoriya biriktiramiz
     const itemData = items.map((el, index) => ({
         el,
         categories: getNewsItemCategories(el, index)
     }));
 
-    // Filter kalitlarini tugma/option'larga yozib qo'yamiz
     buttons.forEach((btn) => {
         btn.dataset.filter = btn.dataset.filter || getNewsFilterKey(btn.textContent);
     });
@@ -697,7 +800,6 @@ function initializeNewsFilter() {
         });
     }
 
-    // "Hech narsa topilmadi" xabari
     let emptyMessage = grid.querySelector(".news-empty");
     if (!emptyMessage) {
         emptyMessage = document.createElement("li");
@@ -722,6 +824,7 @@ function initializeNewsFilter() {
         });
 
         emptyMessage.style.display = visibleCount === 0 ? "block" : "none";
+        storeNewsFilter(filter);
     }
 
     function setActiveButton(activeBtn) {
@@ -732,23 +835,20 @@ function initializeNewsFilter() {
         });
     }
 
-    // Tugmalar
     buttons.forEach((btn) => {
         btn.addEventListener("click", () => {
             setActiveButton(btn);
-            if (select) select.selectedIndex = 0; // "Ko'proq" ga qaytaramiz
+            if (select) select.selectedIndex = 0;
             applyNewsFilter(btn.dataset.filter);
         });
     });
 
-    // Sichqonchali qurilmalarda (hover bor) kursor kelganda ham filter ishlaydi
     if (window.matchMedia("(hover: hover)").matches) {
         buttons.forEach((btn) => {
-            btn.addEventListener("mouseenter", () => btn.click());
+            btn.addEventListener("mouseenter", debounce(() => btn.click(), 60));
         });
     }
 
-    // Select ("Ko'proq")
     if (select) {
         select.addEventListener("change", () => {
             setActiveButton(null);
@@ -756,15 +856,20 @@ function initializeNewsFilter() {
         });
     }
 
-    // Boshlang'ich holat: "Barchasi"
-    const defaultBtn = bar.querySelector(".category-all") || buttons[0];
-    if (defaultBtn) setActiveButton(defaultBtn);
-    applyNewsFilter("all");
-}
+    const storedFilter = getStoredNewsFilter();
+    const matchingButton = storedFilter
+        ? buttons.find((btn) => btn.dataset.filter === storedFilter)
+        : null;
 
-/* =========================================================
-   INIT
-   ========================================================= */
+    if (matchingButton) {
+        setActiveButton(matchingButton);
+        applyNewsFilter(storedFilter);
+    } else {
+        const defaultBtn = bar.querySelector(".category-all") || buttons[0];
+        if (defaultBtn) setActiveButton(defaultBtn);
+        applyNewsFilter("all");
+    }
+}
 
 function initializePage() {
     applyBackgrounds();
@@ -772,5 +877,5 @@ function initializePage() {
     initializePassword();
     initializeTelegramForm();
     initializePlayerModal();
-    initializeNewsFilter(); // yangi
+    initializeNewsFilter();
 }
