@@ -1,16 +1,12 @@
 {
-  "name": "tail_wind",
+  "name": "my-project",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
-    "dev": "npx tailwindcss -i ./src/input.css -o ./src/output.css --watch"
+    "dev": "npx @tailwindcss/cli -i ./src/input.css -o ./src/output.css --watch",
+    "build": "npx @tailwindcss/cli -i ./src/input.css -o ./dist/output.css --minify"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "devDependencies": {
-    "tailwindcss": "^4.3"
+  "dependencies": {
+    "@tailwindcss/cli": "^4.3.0",
+    "tailwindcss": "^4.3.0"
   }
 }
