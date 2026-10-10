@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============ BASE ============ */
+@layer base {
+  html {
+    @apply scroll-smooth scroll-pt-[82px] lte1024:scroll-pt-[72px] lte450:scroll-pt-[58px];
+    line-height: normal;
+  }
+  body {
+    @apply bg-pitch-bg font-sans text-pitch-white select-none pt-[75px];
+  }
+  a {
+    @apply inline-block text-white no-underline;
+    transition: all .5s ease;
+  }
+  h1, h2, h3 {
+    @apply font-audio font-bold;
+  }
+}
+
+/* ============ UTILITIES ============ */
+@layer utilities {
+  .scrollbar-hide {
+    scrollbar-width: none;
+  }
+}
+
+/* ============ COMPONENTS (takrorlanadigan bloklar) ============ */
+@layer components {
+  .container {
+    @apply mx-auto w-full max-w-[1180px];
+  }
+
+  /* Header / mobil menyu */
+  .header-nav-link {
+    @apply flex items-center gap-2.5 px-2.5 py-1.5 text-[18px] font-medium uppercase text-pitch-mute hover:text-white lte950:hidden;
+  }
+  .mobile-menu-link {
+    @apply border-b border-[rgba(238,245,238,.08)] px-2.5 py-3.5 font-teko text-[22px] uppercase tracking-[.03em] text-pitch-mute transition-all duration-300 hover:pl-[18px] hover:text-green-500 lte450:text-[18px];
+  }
+  /* checkbox holatiga bog'liq bolalar (peer ishlamaydigan joy) */
+  #menuToggle:checked ~ .mobile-menu-overlay .mobile-menu-card {
+    --tw-translate-x: 0px;
+  }
+
+  /* Hero */
+  .hero-text {
+    @apply w-full max-w-[900px] text-[16px] leading-[1.75] tracking-[.1px] text-white lte1024:text-[12px] lte1024:text-justify lte810:text-[11px] lte450:text-[10px];
+  }
+  .hero-text-link {
+    @apply px-1 py-0.5 font-semibold italic text-green-500 transition-all duration-500 hover:text-gold;
+  }
+
+  /* About */
+  .card {
+    @apply mx-auto w-full max-w-[600px] rounded-xl border border-green-500/25 bg-[rgba(16,59,40,.9)] p-[25px] transition-all duration-300 hover:border-green-500;
+  }
+  .card h2 {
+    @apply mb-3 text-[20px] text-gold;
+  }
+  .card p {
+    @apply text-[14px] leading-[1.7] text-[#eaf7ee];
+  }
+  .card-btn {
+    @apply mt-[15px] rounded-[7px] border border-transparent bg-white px-3.5 py-2 text-[18px] font-[650] text-black transition-all duration-[400ms] hover:border-green-500 hover:bg-transparent hover:text-green-500 hover:shadow-[0_10px_25px_rgba(0,0,0,.3)] lte1024:text-[13px];
+  }
+
+  /* Afsonalar / Gollar */
+  .grid-title {
+    @apply mb-10 text-center text-[28px] uppercase tracking-[.01em] text-pitch-snow lte1024:text-[17px] lte810:text-[15px] lte450:text-[13px];
+  }
+  .grid-list {
+    @apply grid list-none grid-cols-3 gap-6 px-5 lte1024:grid-cols-2 lte1024:px-10 lte810:grid-cols-1 lte810:px-6;
+  }
+  .grid-list-item {
+    @apply flex cursor-pointer flex-col overflow-hidden rounded-xl border border-[rgba(238,245,238,.14)] bg-pitch-forest transition-all duration-500 hover:border-gold hover:bg-pitch-turf hover:shadow-[0_18px_34px_rgba(0,0,0,.4)];
+  }
+  .grid-list-top {
+    @apply flex aspect-square w-full items-center justify-center overflow-hidden;
+  }
+  .grid-list-img, .grid-list-video {
+    @apply h-full w-full object-cover object-top;
+  }
+  .grid-list-matn {
+    @apply flex flex-col gap-1 px-[22px] pb-6 pt-5;
+  }
+  .grid-list-title {
+    @apply text-left text-[20px] font-semibold text-pitch-snow lte810:text-[17px] lte450:text-[15px];
+  }
+  .grid-list-text {
+    @apply w-full text-[14.5px] leading-[1.6] lte810:text-[13px] lte450:text-[12px];
+  }
+  .grid-button {
+    @apply mt-[15px] w-full cursor-pointer rounded-md border-2 border-white bg-white px-1.5 py-2.5 text-[16px] font-semibold text-black transition-all duration-500 hover:border-green-500 hover:bg-transparent hover:text-green-500;
+  }
+
+  /* Yangiliklar */
+  .news-category-item {
+    @apply inline-flex cursor-pointer flex-col items-center border-0 bg-transparent text-center font-teko text-[20px] uppercase text-[rgb(165,156,156)] transition-all duration-500 hover:text-white after:h-px after:w-2 after:bg-transparent after:transition-all after:duration-500 after:content-[''] hover:after:w-full hover:after:bg-white;
+  }
+  .news-grid-item {
+    @apply flex flex-col gap-[30px] rounded-lg border border-[rgba(238,245,238,.14)] pb-2.5 transition-all duration-500 hover:shadow-news;
+  }
+  .news-grid-link {
+    @apply p-0 hover:shadow-news-link;
+  }
+  .news-grid-img {
+    @apply h-[250px] w-[400px] rounded-t-lg object-cover object-top lte900:w-[800px];
+  }
+  .news-item-text {
+    @apply w-full max-w-[400px] px-2.5 lte900:max-w-[800px];
+  }
+
+  /* FAQ */
+  .faq-item {
+    @apply overflow-hidden rounded-[10px] border border-pitch-line transition-all duration-500 hover:border-white hover:shadow-news;
+  }
+  .faq-question {
+    @apply flex cursor-pointer list-none items-center justify-between bg-pitch-deep px-6 py-[18px] text-[17px] font-semibold text-white transition-all duration-500 [&::-webkit-details-marker]:hidden lte1024:px-[18px] lte1024:py-3.5 lte1024:text-[15px] lte810:px-4 lte810:py-3 lte810:text-[13px] lte450:px-3 lte450:py-2.5 lte450:text-[11px];
+  }
+  .faq-icon {
+    @apply rounded-full border border-white bg-pitch-moss px-3.5 py-[5px] text-center text-[22px] text-white transition-all duration-500 hover:bg-white hover:font-extrabold hover:text-pitch-btnh group-open:rotate-45 group-open:bg-[rgb(114,0,0)] group-open:px-[15px] lte810:px-[9px] lte810:py-[3px] lte810:text-[16px] lte810:group-open:px-2.5 lte450:px-[7px] lte450:py-0.5 lte450:text-[13px];
+  }
+  .faq-answer {
+    @apply bg-pitch-dark2 px-6 py-[18px] lte1024:px-[18px] lte1024:py-3.5 lte810:px-4 lte810:py-3 lte450:px-3 lte450:py-2.5;
+  }
+  .faq-answer p {
+    @apply text-[15px] italic leading-[1.6] text-pitch-btnh lte1024:text-[13px] lte810:text-[12px] lte450:text-[11px];
+  }
+
+  /* Registratsiya */
+  .register-input, .register-textarea {
+    @apply h-[35px] w-[240px] animate-input-pulse border-0 border-b-2 border-solid border-[rgba(238,245,238,.25)] bg-transparent pb-1 text-[14px] text-white outline-none transition-all duration-300 placeholder:text-pitch-mute placeholder:transition-all placeholder:duration-300 hover:animate-none hover:border-green-500 hover:bg-green-500/[.03] hover:shadow-input-hover hover:placeholder:text-green-500 focus:-translate-y-0.5 focus:animate-none focus:border-green-500 focus:bg-green-500/[.04] focus:shadow-input-focus focus:placeholder:tracking-[.5px] focus:placeholder:text-green-500/40 lte810:w-full lte810:max-w-[280px] lte810:placeholder:text-center;
+  }
+  .register-textarea {
+    @apply h-[45px] resize-none;
+  }
+  .register-select {
+    @apply cursor-pointer rounded-md border border-[rgba(238,245,238,.14)] bg-pitch-btn px-2.5 py-1.5 text-center text-[14px] font-[550] text-white transition-all duration-500 hover:border-green-500 hover:bg-pitch-btnh lte810:w-[250px];
+  }
+  #registerModalToggle:checked ~ .modal .modal-card {
+    --tw-translate-y: 0px;
+    opacity: 1;
+  }
+
+  /* Footer ikonkalari */
+  .hero-list-icon {
+    @apply w-8 rounded-md transition-all duration-500;
+  }
+}
