@@ -264,52 +264,6 @@ header{
 .hero-text-link:hover{
     color: #f5c518;
 }
-.about{
-    padding: 60px 0;
-}
-.about-grid{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-.about .card{
-    padding: 25px;
-    background: rgba(16, 59, 40, .9);
-    border: 1px solid rgba(34, 197, 94, .25);
-    border-radius: 12px;
-    transition: .3s ease;
-    width: 100%;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-.about .card:hover{
-    border: 1px solid #22c55e;
-}
-.about .card h2{
-    margin-bottom: 12px;
-    color: #f5c518;
-    font-size: 20px;
-}
-.about .card p{
-    color: #eaf7ee;
-    font-size: 14px;
-    line-height: 1.7;
-}
-.about .cta-link{
-    margin-top: 15px;
-    padding: 8px 14px;
-    background-color: white;
-    color: black;
-    font-weight: 650;
-    border-radius: 7px;
-}
-.about .cta-link:hover{
-    border: 1px solid #22c55e;
-    color: #22c55e;
-    background-color: transparent;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, .3);
-}
 .news{
     padding-top: 50px;
     padding-bottom: 50px;
