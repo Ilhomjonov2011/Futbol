@@ -1,10 +1,10 @@
 {
   "name": "my-project",
   "version": "1.0.0",
-"scripts": {
-  "dev": "npx @tailwindcss/cli -i ./src/input.css -o ./src/output.css --watch",
-  "build": "mkdir -p ./dist && npx @tailwindcss/cli -i ./src/input.css -o ./dist/output.css --minify"
-},
+  "scripts": {
+    "dev": "tailwindcss -i ./src/input.css -o ./src/output.css --watch",
+    "build": "tailwindcss -i ./src/input.css -o ./dist/output.css --minify"
+  },
   "dependencies": {
     "@tailwindcss/cli": "^4.3.0",
     "tailwindcss": "^4.3.0"
