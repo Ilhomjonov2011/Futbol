@@ -1,9 +1,11 @@
+
 document.addEventListener("DOMContentLoaded", () => {
     initializePage();
 });
 
 function debounce(fn, delay = 200) {
     let timer = null;
+
     return (...args) => {
         clearTimeout(timer);
         timer = setTimeout(() => fn(...args), delay);
@@ -23,6 +25,7 @@ function applyBackgrounds() {
     Object.entries(backgrounds).forEach(([selector, image]) => {
         document.querySelectorAll(selector).forEach((element) => {
             if (element.dataset.bgReady === "true") return;
+
             element.dataset.bgReady = "true";
             element.style.backgroundImage = `url("${image}")`;
         });
@@ -31,8 +34,9 @@ function applyBackgrounds() {
 
 function initializeMobileMenu() {
     const toggle = document.querySelector("#menuToggle");
-    if (!toggle) return;
-    if (toggle.dataset.menuReady === "true") return;
+
+    if (!toggle || toggle.dataset.menuReady === "true") return;
+
     toggle.dataset.menuReady = "true";
 
     const closeMenu = () => {
@@ -45,7 +49,9 @@ function initializeMobileMenu() {
 
     document.addEventListener("click", (event) => {
         if (!toggle.checked) return;
+
         const menu = document.querySelector(".mobile-menu, .menu, nav");
+
         if (menu && !menu.contains(event.target) && event.target !== toggle) {
             closeMenu();
         }
@@ -63,6 +69,7 @@ function initializePassword() {
 
     const legacyInput = document.querySelector("#password");
     const legacyToggle = document.querySelector("#togglePassword");
+
     if (legacyInput && legacyToggle) {
         pairs.push([legacyInput, legacyToggle]);
     }
@@ -70,17 +77,21 @@ function initializePassword() {
     document.querySelectorAll("[data-toggle-password]").forEach((toggle) => {
         const targetId = toggle.dataset.togglePassword;
         const input = targetId ? document.getElementById(targetId) : null;
+
         if (input) pairs.push([input, toggle]);
     });
 
     pairs.forEach(([passwordInput, toggle]) => {
         if (toggle.dataset.ready === "true") return;
+
         toggle.dataset.ready = "true";
 
         toggle.addEventListener("click", () => {
             const isPassword = passwordInput.type === "password";
+
             passwordInput.type = isPassword ? "text" : "password";
             toggle.textContent = isPassword ? "🙈" : "👁";
+
             toggle.setAttribute(
                 "aria-label",
                 isPassword ? "Parolni yashirish" : "Parolni ko‘rsatish"
@@ -89,6 +100,8 @@ function initializePassword() {
     });
 }
 
+// ==================== NOTIFICATIONS ====================
+
 let notificationStack = null;
 
 function createNotificationStack() {
@@ -96,6 +109,7 @@ function createNotificationStack() {
 
     notificationStack = document.createElement("div");
     notificationStack.id = "notificationStack";
+
     notificationStack.style.position = "fixed";
     notificationStack.style.top = "20px";
     notificationStack.style.right = "20px";
@@ -104,7 +118,9 @@ function createNotificationStack() {
     notificationStack.style.flexDirection = "column";
     notificationStack.style.gap = "10px";
     notificationStack.style.maxWidth = "350px";
+
     document.body.appendChild(notificationStack);
+
     return notificationStack;
 }
 
@@ -112,6 +128,7 @@ function showNotification(message, type = "success", duration = 4000) {
     const stack = createNotificationStack();
 
     const notification = document.createElement("div");
+
     notification.textContent = message;
     notification.style.padding = "15px 20px";
     notification.style.borderRadius = "10px";
@@ -124,7 +141,10 @@ function showNotification(message, type = "success", duration = 4000) {
     notification.style.transition = "opacity 0.25s ease, transform 0.25s ease";
     notification.style.cursor = "pointer";
 
-    notification.addEventListener("click", () => removeNotification(notification));
+    notification.addEventListener("click", () => {
+        removeNotification(notification);
+    });
+
     stack.appendChild(notification);
 
     requestAnimationFrame(() => {
@@ -132,143 +152,186 @@ function showNotification(message, type = "success", duration = 4000) {
         notification.style.transform = "translateX(0)";
     });
 
-    const timer = setTimeout(() => removeNotification(notification), duration);
+    const timer = setTimeout(() => {
+        removeNotification(notification);
+    }, duration);
+
     notification.dataset.timer = String(timer);
 }
 
 function removeNotification(notification) {
     if (!notification || !notification.isConnected) return;
+
     clearTimeout(Number(notification.dataset.timer));
+
     notification.style.opacity = "0";
     notification.style.transform = "translateX(20px)";
+
     setTimeout(() => notification.remove(), 250);
 }
 
+// ==================== VALIDATION ====================
+
 function normalizePhone(raw) {
     const digits = (raw || "").replace(/[\s\-()]/g, "");
+
     if (/^\+998\d{9}$/.test(digits)) return digits;
     if (/^998\d{9}$/.test(digits)) return `+${digits}`;
     if (/^\d{9}$/.test(digits)) return `+998${digits}`;
+
     return digits;
 }
 
 function isValidEmail(value) {
     if (!value) return true;
+
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+// ==================== TELEGRAM REGISTER FORM ====================
+
 function initializeTelegramForm() {
     const form = document.querySelector("#registerForm");
-    if (!form) return;
-    if (form.dataset.telegramReady === "true") return;
+
+    if (!form || form.dataset.telegramReady === "true") return;
+
     form.dataset.telegramReady = "true";
 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        const submitButton = form.querySelector('button[type="submit"]');
-        if (submitButton && submitButton.disabled) return;
+        const button = form.querySelector('button[type="submit"]');
+
+        if (button && button.disabled) return;
+
+        const get = (name) =>
+            form.querySelector(`[name="${name}"]`)?.value.trim() || "";
+
+        const ism = get("ism");
+        const sana = get("sana");
+        const email = get("email");
+        const parol = form.querySelector('[name="parol"]')?.value || "";
+        const telRaw = get("tel");
+        const jamoa = get("jamoa");
+        const davlat = get("davlat");
+        const liga = get("liga");
+        const pozitsiya = get("pozitsiya");
+        const futbolchi = get("futbolchi");
+        const info = get("info");
+
+        // VALIDATION
+
+        if (!ism) {
+            showNotification("Ism familiyangizni kiriting.", "error");
+            form.querySelector('[name="ism"]')?.focus();
+            return;
+        }
+
+        if (parol.length < 6) {
+            showNotification(
+                "Parol kamida 6 ta belgidan iborat bo‘lishi kerak.",
+                "error"
+            );
+            form.querySelector('[name="parol"]')?.focus();
+            return;
+        }
+
+        if (!telRaw) {
+            showNotification("Telefon raqamingizni kiriting.", "error");
+            form.querySelector('[name="tel"]')?.focus();
+            return;
+        }
+
+        const tel = normalizePhone(telRaw);
+
+        if (!/^\+998\d{9}$/.test(tel)) {
+            showNotification(
+                "Telefon raqami +998901234567 ko‘rinishida bo‘lishi kerak.",
+                "error"
+            );
+            form.querySelector('[name="tel"]')?.focus();
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            showNotification("Email manzili noto‘g‘ri kiritilgan.", "error");
+            form.querySelector('[name="email"]')?.focus();
+            return;
+        }
+
+        if (!info) {
+            showNotification(
+                "Qo‘shimcha ma'lumot maydonini to‘ldiring.",
+                "error"
+            );
+            form.querySelector('[name="info"]')?.focus();
+            return;
+        }
+
+        // DATA
+
+        const data = {
+            ism,
+            sana,
+            email,
+            parol,
+            tel,
+            jamoa,
+            davlat,
+            liga,
+            pozitsiya,
+            futbolchi,
+            info
+        };
+
+        const originalText = button?.textContent;
+
+        if (button) {
+            button.disabled = true;
+            button.textContent = "Yuborilmoqda...";
+        }
+
+        // SERVER REQUEST
+
+        const controller = new AbortController();
+
+        const timeout = setTimeout(() => {
+            controller.abort();
+        }, 30000);
 
         try {
-            const ism = form.querySelector('[name="ism"]')?.value.trim() || "";
-            const sana = form.querySelector('[name="sana"]')?.value || "";
-            const email = form.querySelector('[name="email"]')?.value.trim() || "";
-            const parol = form.querySelector('[name="parol"]')?.value || "";
-            const telRaw = form.querySelector('[name="tel"]')?.value.trim() || "";
-            const jamoa = form.querySelector('[name="jamoa"]')?.value.trim() || "";
-            const davlat = form.querySelector('[name="davlat"]')?.value.trim() || "";
-            const liga = form.querySelector('[name="liga"]')?.value.trim() || "";
-            const pozitsiya = form.querySelector('[name="pozitsiya"]')?.value.trim() || "";
-            const futbolchi = form.querySelector('[name="futbolchi"]')?.value.trim() || "";
-            const info = form.querySelector('[name="info"]')?.value.trim() || "";
-
-            if (!ism) {
-                showNotification("Ism familiyangizni kiriting.", "error");
-                form.querySelector('[name="ism"]')?.focus();
-                return;
-            }
-
-            if (!parol || parol.length < 6) {
-                showNotification("Parol kamida 6 ta belgidan iborat bo‘lishi kerak.", "error");
-                form.querySelector('[name="parol"]')?.focus();
-                return;
-            }
-
-            if (!telRaw) {
-                showNotification("Telefon raqamingizni kiriting.", "error");
-                form.querySelector('[name="tel"]')?.focus();
-                return;
-            }
-
-            const tel = normalizePhone(telRaw);
-            if (!/^\+998\d{9}$/.test(tel)) {
-                showNotification("Telefon raqami +998901234567 ko‘rinishida bo‘lishi kerak.", "error");
-                form.querySelector('[name="tel"]')?.focus();
-                return;
-            }
-
-            if (!isValidEmail(email)) {
-                showNotification("Email manzili noto‘g‘ri kiritilgan.", "error");
-                form.querySelector('[name="email"]')?.focus();
-                return;
-            }
-
-            if (!info) {
-                showNotification("Qo‘shimcha ma'lumot maydonini to‘ldiring.", "error");
-                form.querySelector('[name="info"]')?.focus();
-                return;
-            }
-
-            if (submitButton) {
-                submitButton.disabled = true;
-                submitButton.dataset.originalText = submitButton.dataset.originalText || submitButton.textContent;
-                submitButton.textContent = "Yuborilmoqda...";
-            }
-
-            const data = {
-                ism,
-                sana,
-                email,
-                parol,
-                tel,
-                jamoa,
-                davlat,
-                liga,
-                pozitsiya,
-                futbolchi,
-                info
-            };
-
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 15000);
-
-            let response;
-            try {
-                response = await fetch("/register", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(data),
-                    signal: controller.signal
-                });
-            } finally {
-                clearTimeout(timeoutId);
-            }
+            const response = await fetch("/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data),
+                signal: controller.signal
+            });
 
             const responseText = await response.text();
+
             let result = {};
 
             try {
                 result = responseText ? JSON.parse(responseText) : {};
-            } catch (jsonError) {
-                console.error("Server JSON qaytarmadi:", responseText);
-                throw new Error("Serverdan noto‘g‘ri javob keldi.");
+            } catch {
+                throw new Error("Server noto‘g‘ri javob qaytardi.");
             }
 
-            if (!response.ok || !result.success) {
-                throw new Error(result.message || "Ro‘yxatdan o‘tishda xatolik yuz berdi.");
+            if (!response.ok) {
+                throw new Error(
+                    result.message || `Server xatosi: ${response.status}`
+                );
             }
+
+            if (!result.success) {
+                throw new Error(
+                    result.message || "Ro‘yxatdan o‘tishda xatolik yuz berdi."
+                );
+            }
+
+            // SUCCESS
 
             showNotification(
                 result.message || "Ro‘yxatdan o‘tish muvaffaqiyatli yakunlandi!",
@@ -278,27 +341,41 @@ function initializeTelegramForm() {
             form.reset();
 
             const modalToggle = document.querySelector("#registerModalToggle");
+
             if (modalToggle) {
                 modalToggle.checked = false;
             }
+
         } catch (error) {
-            const message =
-                error.name === "AbortError"
-                    ? "Server javob berishda kechikmoqda. Qaytadan urinib ko‘ring."
-                    : error.message || "Server bilan bog‘lanishda xatolik yuz berdi.";
             console.error("Register error:", error);
+
+            let message = "Server bilan bog‘lanishda xatolik yuz berdi.";
+
+            if (error.name === "AbortError") {
+                message = "Server 30 soniya ichida javob bermadi. Qaytadan urinib ko‘ring.";
+            } else if (error instanceof TypeError) {
+                message = "Internet yoki server bilan bog‘lanishda muammo bor.";
+            } else {
+                message = error.message || message;
+            }
+
             showNotification(message, "error");
+
         } finally {
-            const submitButtonEl = form.querySelector('button[type="submit"]');
-            if (submitButtonEl) {
-                submitButtonEl.disabled = false;
-                submitButtonEl.textContent = submitButtonEl.dataset.originalText || "Tasdiqlash";
+            clearTimeout(timeout);
+
+            if (button) {
+                button.disabled = false;
+                button.textContent = originalText || "Tasdiqlash";
             }
         }
     });
 }
 
+// ==================== PLAYER MEDIA ====================
+
 const MEDIA_BASE = "./assests/medias/";
+
 const media = (file) => encodeURI(MEDIA_BASE + file);
 
 const KIND_LABELS = {
@@ -325,6 +402,8 @@ function makeVideos(slug, fallback) {
     ];
 }
 
+// ==================== PLAYERS ====================
+
 const PLAYERS = {
     ronaldo: {
         match: "ronaldo",
@@ -339,6 +418,7 @@ const PLAYERS = {
         ],
         videos: makeVideos("Ronaldo", media("CR7.mp4"))
     },
+
     messi: {
         match: "messi",
         name: "Lionel Messi",
@@ -352,6 +432,7 @@ const PLAYERS = {
         ],
         videos: makeVideos("Messi", media("Messi.mp4"))
     },
+
     pele: {
         match: "pele",
         name: "Pele (Edson Arantes)",
@@ -365,6 +446,7 @@ const PLAYERS = {
         ],
         videos: makeVideos("Pele", null)
     },
+
     neymar: {
         match: "neymar",
         name: "Neymar Jr.",
@@ -378,6 +460,7 @@ const PLAYERS = {
         ],
         videos: makeVideos("Neymar", media("Neymar Jr.mp4"))
     },
+
     maradona: {
         match: "maradona",
         name: "Diego Maradona",
@@ -391,6 +474,7 @@ const PLAYERS = {
         ],
         videos: makeVideos("Maradona", null)
     },
+
     debruyne: {
         match: "bruyne",
         name: "Kevin De Bruyne",
@@ -404,6 +488,7 @@ const PLAYERS = {
         ],
         videos: makeVideos("DeBruyne", media("Kevin.mp4"))
     },
+
     mbappe: {
         match: "mbapp",
         name: "Kylian Mbappé",
@@ -417,6 +502,7 @@ const PLAYERS = {
         ],
         videos: makeVideos("Mbappe", media("Kylian Mbappé.mp4"))
     },
+
     haaland: {
         match: "haaland",
         name: "Erling Haaland",
@@ -432,6 +518,8 @@ const PLAYERS = {
     }
 };
 
+// ==================== PLAYER MODAL ====================
+
 const playerModalState = {
     key: null,
     index: 0,
@@ -441,41 +529,48 @@ const playerModalState = {
 
 function createPlayerModal() {
     let modal = document.querySelector("#playerModal");
+
     if (modal) return modal;
 
     modal = document.createElement("div");
     modal.id = "playerModal";
     modal.className = "pm";
+
     modal.setAttribute("role", "dialog");
     modal.setAttribute("aria-modal", "true");
     modal.setAttribute("aria-labelledby", "pmTitle");
 
     modal.innerHTML = `
-    <div class="pm-backdrop" data-pm-close></div>
-    <div class="pm-dialog">
-        <div class="pm-bar">
-            <span class="pm-flag" id="pmFlag" aria-hidden="true"></span>
-            <h3 class="pm-title" id="pmTitle"></h3>
-            <button type="button" class="pm-close" data-pm-close aria-label="Oynani yopish">✕</button>
-        </div>
-        <div class="pm-body">
-            <div class="pm-media">
-                <div class="pm-stage">
-                    <video class="pm-video" controls playsinline preload="metadata"></video>
-                    <span class="pm-badge" hidden></span>
-                    <div class="pm-error">
-                        <p class="pm-error-title">Video hozircha mavjud emas</p>
-                        <p class="pm-error-text">Bu futbolchining videosi tez orada qo‘shiladi. Boshqa videoni tanlab ko‘ring.</p>
+        <div class="pm-backdrop" data-pm-close></div>
+
+        <div class="pm-dialog">
+            <div class="pm-bar">
+                <span class="pm-flag" id="pmFlag" aria-hidden="true"></span>
+                <h3 class="pm-title" id="pmTitle"></h3>
+                <button type="button" class="pm-close" data-pm-close aria-label="Oynani yopish">✕</button>
+            </div>
+
+            <div class="pm-body">
+                <div class="pm-media">
+                    <div class="pm-stage">
+                        <video class="pm-video" controls playsinline preload="metadata"></video>
+                        <span class="pm-badge" hidden></span>
+
+                        <div class="pm-error">
+                            <p class="pm-error-title">Video hozircha mavjud emas</p>
+                            <p class="pm-error-text">Bu futbolchining videosi tez orada qo‘shiladi. Boshqa videoni tanlab ko‘ring.</p>
+                        </div>
                     </div>
+
+                    <div class="pm-playlist"></div>
                 </div>
-                <div class="pm-playlist"></div>
-            </div>
-            <div class="pm-info">
-                <p class="pm-text"></p>
-                <dl class="pm-facts"></dl>
+
+                <div class="pm-info">
+                    <p class="pm-text"></p>
+                    <dl class="pm-facts"></dl>
+                </div>
             </div>
         </div>
-    </div>
     `;
 
     document.body.appendChild(modal);
@@ -487,17 +582,24 @@ function createPlayerModal() {
         }
 
         const track = event.target.closest(".pm-track");
+
         if (track) {
             selectPlayerVideo(Number(track.dataset.index), false);
         }
     });
 
-    modal.querySelector(".pm-video").addEventListener("error", handlePlayerVideoError);
+    modal.querySelector(".pm-video").addEventListener(
+        "error",
+        handlePlayerVideoError
+    );
 
     modal.querySelector(".pm-video").addEventListener("ended", () => {
         const player = PLAYERS[playerModalState.key];
+
         if (!player) return;
+
         const nextIndex = playerModalState.index + 1;
+
         if (player.videos[nextIndex]) {
             selectPlayerVideo(nextIndex, false);
         }
@@ -509,21 +611,25 @@ function createPlayerModal() {
 function renderPlayerPlaylist(player) {
     const modal = document.querySelector("#playerModal");
     const playlist = modal.querySelector(".pm-playlist");
+
     playlist.innerHTML = "";
 
     player.videos.forEach((video, index) => {
         const button = document.createElement("button");
+
         button.type = "button";
         button.className = "pm-track";
         button.dataset.index = String(index);
 
         button.innerHTML = `
-        <span class="pm-track-icon" aria-hidden="true">▶</span>
-        <span class="pm-track-text">
-            <span class="pm-track-title">${video.title}</span>
-            <span class="pm-track-kind">${KIND_LABELS[video.kind] || ""}</span>
-        </span>
-        <span class="pm-chip" data-q="${video.quality}">${video.quality}</span>
+            <span class="pm-track-icon" aria-hidden="true">▶</span>
+
+            <span class="pm-track-text">
+                <span class="pm-track-title">${video.title}</span>
+                <span class="pm-track-kind">${KIND_LABELS[video.kind] || ""}</span>
+            </span>
+
+            <span class="pm-chip" data-q="${video.quality}">${video.quality}</span>
         `;
 
         playlist.appendChild(button);
@@ -532,9 +638,11 @@ function renderPlayerPlaylist(player) {
 
 function selectPlayerVideo(index, useFallback = false) {
     const player = PLAYERS[playerModalState.key];
+
     if (!player) return;
 
     const item = player.videos[index];
+
     if (!item) return;
 
     const modal = document.querySelector("#playerModal");
@@ -549,6 +657,7 @@ function selectPlayerVideo(index, useFallback = false) {
     const quality = useFallback ? "std" : item.quality;
 
     error.classList.remove("is-visible");
+
     badge.hidden = false;
     badge.dataset.q = quality;
     badge.textContent = quality === "std" ? "Standart" : `${quality} UHD`;
@@ -562,12 +671,14 @@ function selectPlayerVideo(index, useFallback = false) {
     video.load();
 
     const playPromise = video.play();
+
     if (playPromise && typeof playPromise.catch === "function") {
         playPromise.catch(() => { });
     }
 
     modal.querySelectorAll(".pm-track").forEach((track) => {
         const active = Number(track.dataset.index) === index;
+
         track.classList.toggle("is-active", active);
 
         if (active) {
@@ -580,10 +691,12 @@ function selectPlayerVideo(index, useFallback = false) {
 
 function handlePlayerVideoError() {
     const modal = document.querySelector("#playerModal");
+
     if (!modal) return;
 
     const player = PLAYERS[playerModalState.key];
     const item = player && player.videos[playerModalState.index];
+
     if (!item) return;
 
     if (!playerModalState.usingFallback && item.fallback) {
@@ -592,12 +705,14 @@ function handlePlayerVideoError() {
     }
 
     console.warn("Video topilmadi:", item.src);
+
     modal.querySelector(".pm-badge").hidden = true;
     modal.querySelector(".pm-error").classList.add("is-visible");
 }
 
 function openPlayerModal(key, trigger) {
     const player = PLAYERS[key];
+
     if (!player) return;
 
     const modal = createPlayerModal();
@@ -625,23 +740,28 @@ function openPlayerModal(key, trigger) {
     selectPlayerVideo(0, false);
 
     modal.querySelector(".pm-close").focus({ preventScroll: true });
+
     document.addEventListener("keydown", handlePlayerModalKeys);
 }
 
 function closePlayerModal() {
     const modal = document.querySelector("#playerModal");
+
     if (!modal || !modal.classList.contains("is-open")) return;
 
     const video = modal.querySelector(".pm-video");
+
     video.pause();
     video.removeAttribute("src");
     video.load();
 
     modal.classList.remove("is-open");
     document.body.classList.remove("pm-open");
+
     document.removeEventListener("keydown", handlePlayerModalKeys);
 
     const lastFocus = playerModalState.lastFocus;
+
     if (lastFocus && typeof lastFocus.focus === "function") {
         lastFocus.focus({ preventScroll: true });
     }
@@ -649,23 +769,29 @@ function closePlayerModal() {
 
 function handlePlayerModalKeys(event) {
     const modal = document.querySelector("#playerModal");
+
     if (!modal || !modal.classList.contains("is-open")) return;
 
     if (event.key === "Escape") {
         if (document.fullscreenElement) return;
+
         closePlayerModal();
         return;
     }
 
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
         const player = PLAYERS[playerModalState.key];
+
         if (!player) return;
+
         const delta = event.key === "ArrowDown" ? 1 : -1;
         const nextIndex = playerModalState.index + delta;
+
         if (player.videos[nextIndex]) {
             event.preventDefault();
             selectPlayerVideo(nextIndex, false);
         }
+
         return;
     }
 
@@ -702,19 +828,25 @@ function findPlayerKey(button) {
 
 function initializePlayerModal() {
     if (document.body.dataset.playerModalReady === "true") return;
+
     document.body.dataset.playerModalReady = "true";
 
     document.addEventListener("click", (event) => {
         const button = event.target.closest(".grid-button");
+
         if (!button) return;
 
         const key = button.dataset.player || findPlayerKey(button);
+
         if (!key || !PLAYERS[key]) return;
 
         event.preventDefault();
+
         openPlayerModal(key, button);
     });
 }
+
+// ==================== NEWS FILTER ====================
 
 const NEWS_FILTER_MAP = {
     "barchasi": "all",
@@ -751,9 +883,14 @@ function getNewsFilterKey(text) {
 
 function getNewsItemCategories(item, index) {
     const attr = item.dataset.category;
+
     if (attr) {
-        return attr.split(/[\s,]+/).map((c) => c.trim().toLowerCase()).filter(Boolean);
+        return attr
+            .split(/[\s,]+/)
+            .map((c) => c.trim().toLowerCase())
+            .filter(Boolean);
     }
+
     return NEWS_DEFAULT_CATEGORIES[index] || [];
 }
 
@@ -776,13 +913,22 @@ function storeNewsFilter(filter) {
 function initializeNewsFilter() {
     const grid = document.querySelector("#news");
     const bar = document.querySelector(".news-category");
+
     if (!grid || !bar) return;
+
     if (bar.dataset.filterReady === "true") return;
+
     bar.dataset.filterReady = "true";
 
-    const buttons = Array.from(bar.querySelectorAll(".news-category-item"));
+    const buttons = Array.from(
+        bar.querySelectorAll(".news-category-item")
+    );
+
     const select = bar.querySelector(".register-select");
-    const items = Array.from(grid.querySelectorAll(".news-grid-item"));
+
+    const items = Array.from(
+        grid.querySelectorAll(".news-grid-item")
+    );
 
     const itemData = items.map((el, index) => ({
         el,
@@ -796,13 +942,16 @@ function initializeNewsFilter() {
     if (select) {
         Array.from(select.options).forEach((opt) => {
             if (opt.disabled) return;
+
             opt.value = getNewsFilterKey(opt.textContent);
         });
     }
 
     let emptyMessage = grid.querySelector(".news-empty");
+
     if (!emptyMessage) {
         emptyMessage = document.createElement("li");
+
         emptyMessage.className = "news-empty";
         emptyMessage.textContent = "Bu bo‘limda hozircha yangilik yo‘q.";
         emptyMessage.style.display = "none";
@@ -811,6 +960,7 @@ function initializeNewsFilter() {
         emptyMessage.style.padding = "30px 10px";
         emptyMessage.style.color = "#8fa598";
         emptyMessage.style.listStyle = "none";
+
         grid.appendChild(emptyMessage);
     }
 
@@ -819,17 +969,21 @@ function initializeNewsFilter() {
 
         itemData.forEach(({ el, categories }) => {
             const show = filter === "all" || categories.includes(filter);
+
             el.style.display = show ? "" : "none";
+
             if (show) visibleCount++;
         });
 
         emptyMessage.style.display = visibleCount === 0 ? "block" : "none";
+
         storeNewsFilter(filter);
     }
 
     function setActiveButton(activeBtn) {
         buttons.forEach((btn) => {
             const isActive = btn === activeBtn;
+
             btn.classList.toggle("is-active", isActive);
             btn.setAttribute("aria-pressed", String(isActive));
         });
@@ -838,7 +992,9 @@ function initializeNewsFilter() {
     buttons.forEach((btn) => {
         btn.addEventListener("click", () => {
             setActiveButton(btn);
+
             if (select) select.selectedIndex = 0;
+
             applyNewsFilter(btn.dataset.filter);
         });
     });
@@ -857,6 +1013,7 @@ function initializeNewsFilter() {
     }
 
     const storedFilter = getStoredNewsFilter();
+
     const matchingButton = storedFilter
         ? buttons.find((btn) => btn.dataset.filter === storedFilter)
         : null;
@@ -866,10 +1023,14 @@ function initializeNewsFilter() {
         applyNewsFilter(storedFilter);
     } else {
         const defaultBtn = bar.querySelector(".category-all") || buttons[0];
+
         if (defaultBtn) setActiveButton(defaultBtn);
+
         applyNewsFilter("all");
     }
 }
+
+// ==================== INITIALIZE PAGE ====================
 
 function initializePage() {
     applyBackgrounds();
